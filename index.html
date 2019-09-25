@@ -13,8 +13,12 @@ title: Home
     </h1>
 
     <span class="post-date">{{ post.date | date_to_string }}</span>
-
-    {{ post.content }}
+    
+    {% if post.content.size > 200 %}
+        {{ post.content | slice: 0, 200 | rstrip | append: "..." }}
+    {% else %}
+        {{ post.content }}
+    {% endif %}
   </div>
   {% endfor %}
 </div>
