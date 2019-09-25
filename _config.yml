@@ -247,6 +247,7 @@ plugins:
   - jekyll-paginate
   - jekyll-sitemap
   - redcarpet
+  - pygments.rb
   - jekyll-gist
 
 # Beautiful Jekyll / Dean Attali
