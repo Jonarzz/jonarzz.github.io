@@ -246,7 +246,6 @@ prose:
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
-  - redcarpet
   - pygments.rb
   - jekyll-gist
 
