@@ -1,1 +1,9 @@
+title: Jonasz's dev blog
+description: Java and more
+
 theme: jekyll-theme-minimal
+markdown: kramdown
+plugins:
+  - jekyll-paginate
+  
+paginate: 5
