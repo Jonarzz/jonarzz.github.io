@@ -6,3 +6,44 @@
 body {
     padding: 25px;
 }
+
+ul#markdown-toc,
+ul#markdown-toc ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+
+ul#markdown-toc ul {
+    padding-inline-start: 20px;
+    margin: 0;
+}
+
+.wrapper {
+    width: initial;
+    display: flex;
+    flex: 1 1 auto;
+    margin: 0 10%;
+}
+
+header, section {
+    float: none;
+    position: initial;
+    width: initial;
+}
+
+header {
+    white-space: nowrap;
+    margin-right: 50px;
+}
+
+header > h1 {
+    margin-bottom: 5px;
+}
+
+header > p {
+    float: right;
+}
+
+section > p {
+    text-align: justify;
+}

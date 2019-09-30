@@ -5,5 +5,5 @@ theme: jekyll-theme-minimal
 markdown: kramdown
 plugins:
   - jekyll-paginate
-  
+
 paginate: 5
