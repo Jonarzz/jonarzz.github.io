@@ -47,3 +47,7 @@ header > p {
 section > p {
     text-align: justify;
 }
+
+a:hover, a:focus {
+    font-weight: inherit;
+}

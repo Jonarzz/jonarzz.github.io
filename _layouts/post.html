@@ -1,10 +1,16 @@
 ---
 layout: default
 ---
-<h2>
+<h1>
     {{ page.title }}
+</h1>
+<h2>
+    {{ page.subtitle }}
 </h2>
 <h5>
     {{ page.date | date: "%m/%d/%Y" }}
 </h5>
 {{ content }}
+<script>
+    document.querySelectorAll('section a').forEach(link => link.target = '_blank');
+</script>
