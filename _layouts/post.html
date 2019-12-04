@@ -12,5 +12,17 @@ layout: default
 </h5>
 {{ content }}
 <script>
+    document.querySelectorAll('section img').forEach(img => {
+        const link = document.createElement('a');
+        link.href = img.src;
+        link.target = '_blank';
+        link.style.cursor = 'pointer';
+
+        img.parentElement.replaceChild(link, img);
+        link.appendChild(img);
+    });
     document.querySelectorAll('section a').forEach(link => link.target = '_blank');
 </script>
+<a href="{{ site.url }}" class="fixed-link-to-main-page">
+    Go to main page
+</a>

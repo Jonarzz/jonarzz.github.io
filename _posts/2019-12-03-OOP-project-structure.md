@@ -12,11 +12,12 @@ it would be wise to do a few things first.
 When creating an enterprise scale application with complicated business logic and lots of technical demands,
 Java seems like a good choice. But what if you wanted to create a simple or even more complex,
 reactive page? Or a simple command line tool? You could actually do all these things in Java
-(though I've seen only bad [Vaadin](https://vaadin.com/) usage, unfortunately),
+(though I've seen only bad [Vaadin](https://vaadin.com/) usage, unfortunately; also -
+[welcome to the future](https://trends.google.pl/trends/explore?date=all&q=vaadin,gwt,react,angular)),
 but other languages and tools such as plain
 [HTML](https://developer.mozilla.org/pl/docs/Web/HTML)+[CSS](https://developer.mozilla.org/pl/docs/Web/HTML),
 [React](https://reactjs.org/) or [Python](https://www.python.org/) probably would be
-more suitable for the mentioned purposes.
+more suitable for the aforementioned purposes.
 
 Similarly in just Java world **there is a ton of tools and libraries and choosing the right ones
 for the project is an important thing to do** at the very start and during the development.
@@ -24,19 +25,20 @@ Lots of code has been written and there are so many open source and free to use 
 that there is no point in writing everything from scratch. Of course, it's worth knowing how they work
 or even write some similar tools to learn, but in the end using appropriate tools and frameworks
 can save us a lot of time and trouble. On the other hand, multiplicity of such projects often makes it
-hard to come up with a good choice at the very beginning, but the Internet is rich in articles
-and IT companies and teams structures make it easier for the knowledge to flow. You can find a short list
-of Java frameworks [here](https://en.wikipedia.org/wiki/List_of_Java_frameworks), but usually the best idea
-is to look up the Internet - blog posts, articles and StackOverflow pages - to find the best tool
-for your purpose.
+hard to come up with a good choice at the very beginning. It all comes with experience,
+so if you can use your IT colleagues' knowledge at the univeristy or at work - do it!
+You can find a vast list of Java frameworks [here](https://github.com/akullpp/awesome-java).
+Usually the best idea is to just look up the Internet - blog posts and articles - to find the best tool
+for your purpose - [here's](https://hackr.io/blog/java-frameworks) an example.
+StackOverflow pages are also a great source with often thorough analysis and discussion.
 
 ### Set up the world
 Plain Java projects are hard to maintain and hard to build for others.
 **Always use [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).**
 These tools allow you to set up a complete build with proper packaging,
 run tests in the process and manage all the project's dependencies. Thanks to that, a properly
-configured Maven/Gradle project can take up only a few seconds from downloading it to getting it
-to be running or to being able to modify it easily.
+configured Maven/Gradle project can take up only a few seconds from downloading it to getting it to run
+or to being able to modify it easily.
 
 An important thing when creating a tool that others might find useful is to choose the right Java version.
 Big companies are often reluctant to change the JDK version every few months and also to choose
@@ -70,3 +72,78 @@ could be simple objects only transferring data or [objects incorporating logic](
 [here's a nice place to start](https://stackoverflow.com/a/38549461/3305737)
 (logical components as defined in [Spring Framework](https://spring.io/))*.
 
+Now let's imagine we would like to create an e-commerce application (web shop). A few exemplary
+data model entities that could be included: Product, Customer, Cart, Order, Payment, Delivery.
+When using the approach described above, we could end up with a catalog structure like so:
+
+- `com.example.dao`
+    - ProductRepository
+    - CustomerRepository
+    - CartRepository
+    - OrderRepository
+    - PaymentRepository
+    - DeliveryRepository
+- `com.example.service`
+    - ProductService
+    - CustomerService
+    - CartService
+    - OrderService
+    - PaymentService
+    - DeliveryService
+- `com.example.controller`
+    - ProductController
+    - CustomerController
+    - CartController
+    - OrderController
+    - PaymentController
+    - DeliveryController
+- `com.example.model`
+    - Product
+    - Customer
+    - Cart
+    - Order
+    - Payment
+    - Delivery
+    
+...and that's without interfaces and their implementations. That's **package by layer**. Often used, has it's advantages, but now that I worked in
+environments with such approach more, I prefer **package by feature**.
+
+Package-by-feature's main goal is to separate the files by their business and not technical context.
+First let's see how would the structure above look in this approach:
+
+- `com.example.product`
+    - ProductRepository
+    - ProductService
+    - ProductController
+    - Product
+- `com.example.customer`
+    - CustomerRepository
+    - CustomerService
+    - CustomerController
+    - Customer
+- `com.example.cart`
+    - CartRepository
+    - CartService
+    - CartController
+    - Cart
+- `com.example.order`
+    - OrderRepository
+    - OrderService
+    - OrderController
+    - Order
+- `com.example.payment`
+    - PaymentRepository
+    - PaymentService
+    - PaymentController
+    - Payment
+- `com.example.delivery`
+    - DeliveryRepository
+    - DeliveryService
+    - DeliveryController
+    - Delivery
+
+More usual situation is to have to "fix something related to order" than "fix all controllers",
+so this structure makes it easier to find yourself in. Another huge advantage is the possibility
+to actually use the **default
+[access level modifier](https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html)**,
+which is not `public`, on the contrary to popular belief, and it was made like this for a reason.
