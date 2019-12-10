@@ -36,9 +36,10 @@ StackOverflow pages are also a great source with often thorough analysis and dis
 Plain Java projects are hard to maintain and hard to build for others.
 **Always use [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).**
 These tools allow you to set up a complete build with proper packaging,
-run tests in the process and manage all the project's dependencies. Thanks to that, a properly
-configured Maven/Gradle project can take up only a few seconds from downloading it to getting it to run
-or to being able to modify it easily.
+manage all the project's dependencies and utilize plugins: run tests during build process,
+generate JavaDoc and do [many more things](https://maven.apache.org/plugins/).
+Thanks to that, a properly configured Maven/Gradle project can take up only a few seconds
+from downloading it to getting it to run or to being able to modify it easily.
 
 An important thing when creating a tool that others might find useful is to choose the right Java version.
 Big companies are often reluctant to change the JDK version every few months and also to choose
@@ -143,7 +144,36 @@ First let's see how would the structure above look in this approach:
     - Delivery
 
 More usual situation is to have to "fix something related to order" than "fix all controllers",
-so this structure makes it easier to find yourself in. Another huge advantage is the possibility
-to actually use the **default
+so this structure makes it easier to find yourself in. Testing modules with concise
+and strictly separated logic is easier and more consistent as well.
+Another huge advantage is the possibility to actually use the **default
 [access level modifier](https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html)**,
-which is not `public`, on the contrary to popular belief, and it was made like this for a reason.
+which is not `public` on the contrary to popular belief and it was made like this for a reason.
+
+API (application programming **interface**) is a commonly used term. Maybe even used to the point that
+the abbreviation loses it's actual meaning, becoming anything the person saying it wanted to say.
+Emphasis on the word *interface* is not coincidental. API is what you're actually exposing in your
+application. If someone is to use your code, they will do it through the API. If you make everything
+public, it may turn out that the tool or framework you've written is not used as you intended.
+You create a new version of your library and you want to change some names, modify method signatures -
+if public classes are modified, the version will have to increase it's [major part](https://semver.org/).
+That's why most libraries don't change this part so often -
+such changes are ["breaking"](https://en.wiktionary.org/wiki/breaking_change), require changes in
+client code or even migration. And this is the reason not to start coding without analyzing the problem,
+thinking it over, designing an API and encapsulating it.
+
+*Note: "REST API" is commonly used altogether and it also fits the definition above -
+ this is an externally exposed web interface that has a strict contract,
+ hence the existence of [versioning mechanism](https://restfulapi.net/versioning/)*.
+ 
+So - having `public` modifier only on the classes we want to be used externally of the package
+makes it easier to expose an API, view and analyze the code, test it and refactor. In the shop example
+above we should probably make only `Service` classes public and the rest could stay hidden.
+
+The last advantage of the package by feature approach is it's modularity. With strict boundaries
+between the packages and
+[loose coupling](https://stackoverflow.com/questions/226977/what-is-loose-coupling-please-provide-examples)
+it is pretty easy to extract some parts of the application to a separate one, maybe even deployed on
+a separate server. Boom! [Microservices](https://microservices.io/).
+
+In the next part we will finally see some code - based on everything said above.
