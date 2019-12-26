@@ -5,8 +5,8 @@ layout: default
     <h1>{{ post.title }}</h1>
     <h2>{{ post.subtitle }}</h2>
     <h5>{{ post.date | date: "%d/%m/%Y" }}</h5>
-    <div style="text-align: justify;">{{ post.excerpt }}</div>
-    <a href="{{ post.url }}" style="position: relative; top: -10px;">Read more...</a>
+    <div style="text-align: justify;">{{ post.excerpt | strip_html }}</div>
+    <a href="{{ post.url }}" style="display: block; margin: 5px 0;">Read more...</a>
     <hr/>
 {% endfor %}
 

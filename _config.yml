@@ -1,9 +1,16 @@
 title: Jonasz's dev blog
 description: Java and more
 
+repository: jonarzz/jonarzz.github.io
+
 theme: jekyll-theme-minimal
 markdown: kramdown
 plugins:
   - jekyll-paginate
+  - jekyll-relative-links
 
 paginate: 5
+
+relative_links:
+  enabled:     true
+  collections: true
