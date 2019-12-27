@@ -38,10 +38,10 @@ header {
 }
 
 header > h1 {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
-header > p {
+header > * {
     float: right;
 }
 
@@ -63,11 +63,17 @@ a:hover, a:focus {
     left: 25vw;
     background: white;
     padding: 5px;
+    border: lightgrey solid 1px;
+    border-bottom: none;
 }
 
 @media screen and (max-width: 900px) {
     .wrapper {
         flex-direction: column;
+    }
+
+    header {
+        margin-right: 0;
     }
 
     .fixed-link-to-main-page {

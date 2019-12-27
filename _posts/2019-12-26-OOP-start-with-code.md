@@ -16,18 +16,18 @@ something relatively small. I'd say that it would be best if such a project coul
 in a week in it's basic form. After that time you could start something new or continue with
 adding new features to this one, but I want to emphasize having something actually **done**.
 While [agile development](https://agilemanifesto.org/principles.html) might not be all
-sunshine and rainbows, when carried out right, really helps both the developers and
+sunshine and rainbows, when carried out right, it really helps both the developers and
 [the client](2019-09-24-OOP-intro.md#and-its-changed). Why not be agile at home?
 
 ### Create the project
 I assume that you have an IDE of your choice installed (it's IntelliJ IDEA for me),
 since this series' target audience are developers with some experience. As said in the
-[previous post](2019-12-03-OOP-project-structure.md) - start with the build tool.
+[previous post](2019-12-03-OOP-project-structure.md#build-tools) - start with the build tool.
 I'm using Maven in this project, but
 Gradle [is analogous](https://docs.gradle.org/current/userguide/migrating_from_maven.html#migmvn:migrating_deps).
 
 When creating a new Maven project, we need to set up the
-[pom.xml](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) configuration file
+[pom.xml](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#What_is_a_POM) configuration file
 (when using an IDE, this should be handled by a project wizard). Let's start with a
 [minimal POM](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#Minimal_POM).
 
