@@ -45,6 +45,31 @@ with the username replaced.
 **Version** - current version of the project - already explained in
 [the previous post](2019-12-03-OOP-project-structure.md#api).
 
-### Define responsibilities
+```xml
+<groupId>io.github.jonarzz</groupId>
+<artifactId>i18n-example</artifactId>
+<version>1.0.0</version>
+```
 
+### Define responsibilities
+Let's think of the steps our application should perform to do what it's supposed to do
+and meet the requirements. We'll prepare a [user story](https://www.atlassian.com/agile/project-management/user-stories)
+and divide it into more technical tasks.
+#### Main goal
+As a static website owner I want to be able to create multiple files in different languages
+based on a template, so that it's easy to create multilingual versions of my page and reach people
+from around the world.
+#### Requirements
+ - run as an executable command line script 
+    - *might change later*
+ - load the dictionary file with translations
+    - *format not yet known*
+ - load one or more template files
+    - *way of searching for template files not yet known*
+ - replace the placeholders in templates with appropriate translations
+    - *placeholder style not yet known*
+ - save translated files
+ - display a meaningful error message in case of any problems
+
+### What is in it for a developer
 *TODO*
