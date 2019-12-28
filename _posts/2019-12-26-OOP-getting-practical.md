@@ -10,7 +10,7 @@ Having a good idea for a project is not an easy thing. What's even more
 difficult is actually starting the project and finishing it. Many distractions
 show up during the process of development, especially when programming after school/work,
 during your free time. You may be tired, may have other things to do or maybe even 
-a great idea for an application has suddenly come to your mind.
+a great idea for another application has suddenly come to your mind.
 [Sounds familiar?](http://www.commitstrip.com/en/2014/11/25/west-side-project-story/)
 
 When learning a framework, a tool or a new programming language, I would suggest starting with
@@ -30,7 +30,7 @@ Gradle [is analogous](https://docs.gradle.org/current/userguide/migrating_from_m
 
 When creating a new Maven project, we need to set up the
 [pom.xml](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#What_is_a_POM) configuration file
-(when using an IDE, this should be handled by a project wizard). Let's start with a
+(when using an IDE, this is usually handled by a project wizard). Let's start with a
 [minimal POM](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#Minimal_POM).
 
 **Group ID** is an identifier that all our projects should have in common - it's a way of defining
@@ -51,6 +51,25 @@ with the username replaced.
 <groupId>io.github.jonarzz</groupId>
 <artifactId>i18n-example</artifactId>
 <version>1.0.0</version>
+```
+
+Maven is installed (according to the tutorial on the aforementioned page or embedded in the IDE)
+and the system path is set, the project is configured - let's build it.
+```
+mvn clean package
+```
+run from the command line in the project base directory (where `pom.xml` is placed)
+should result in a successful build and a `.jar` file in the `target` directory.
+
+One last thing worth noting is the warning displayed during the build:
+```
+[WARNING] Using platform encoding (Cp1250 actually) to copy filtered resources, i.e. build is platform dependent!
+```
+adding such section in the `pom.xml` file is a solution:
+```xml
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
 ```
 
 ### Define responsibilities
@@ -74,4 +93,16 @@ from around the world.
  - display a meaningful error message in case of any problems
 
 ### What is in it for a developer
-*TODO*
+Thanks to dividing a seemingly simple goal into smaller tasks, we are able to divide the actual
+code into parts that are separated from each other and only communicating through the packages' API.
+It gives us a possibility to define the API from the start and then, for example, split the tasks among
+team members or perform internal package refactoring without affecting the whole project workflow
+(as long as the tests of the package API are successful). So right now a natural step would be designing
+the said API for each of the requirements and preparing the packages. They may change in the future,
+of course it's hard to think about every possibility at the very beginning of the project,
+but the designing will help us create more elastic, easily maintainable and expandable code base.
+
+### [Red - green - refactor](https://deviq.com/test-driven-development/)
+In the next part the we will focus on the said API and to do that, we will write some test cases
+that will be failing, until we develop the actual code - then they should pass. After that
+we will be ready for refactoring. 
