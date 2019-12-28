@@ -103,6 +103,6 @@ of course it's hard to think about every possibility at the very beginning of th
 but the designing will help us create more elastic, easily maintainable and expandable code base.
 
 ### [Red - green - refactor](https://deviq.com/test-driven-development/)
-In the next part the we will focus on the said API and to do that, we will write some test cases
+In the next part we will focus on the said API and to do that, we will write some test cases
 that will be failing, until we develop the actual code - then they should pass. After that
 we will be ready for refactoring. 
