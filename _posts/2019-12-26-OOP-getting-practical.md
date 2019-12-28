@@ -1,7 +1,9 @@
 ---
 layout: post
 title: "OOP - less definitions, more practice"
-subtitle: "3. Actually start the project"
+subtitle: "Getting practical"
+excerpt: Having a good idea for a project is not an easy thing.
+         What's even more difficult is actually starting the project and finishing it.
 ---
 ### Easier thought than done
 Having a good idea for a project is not an easy thing. What's even more
@@ -13,7 +15,7 @@ a great idea for an application has suddenly come to your mind.
 
 When learning a framework, a tool or a new programming language, I would suggest starting with
 something relatively small. I'd say that it would be best if such a project could be finished
-in a week in it's basic form. After that time you could start something new or continue with
+in it's basic form in a week. After that time you could start something new or continue with
 adding new features to this one, but I want to emphasize having something actually **done**.
 While [agile development](https://agilemanifesto.org/principles.html) might not be all
 sunshine and rainbows, when carried out right, it really helps both the developers and

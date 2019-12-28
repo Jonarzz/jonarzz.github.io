@@ -38,14 +38,20 @@ header, section {
 
 header {
     white-space: nowrap;
-    margin-right: 50px;
+    text-align: right;
+    margin-bottom: 15px;
 }
 
 header > h1 {
     margin-bottom: 10px;
 }
 
-header > * {
+.header-and-toc-wrapper {
+    margin-right: 50px;
+    margin-bottom: 10px;
+}
+
+.header-and-toc-wrapper > aside {
     float: right;
     clear: both;
 }
@@ -77,7 +83,7 @@ a:hover, a:focus {
         flex-direction: column;
     }
 
-    header {
+    .header-and-toc-wrapper {
         margin-right: 0;
     }
 

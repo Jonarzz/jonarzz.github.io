@@ -1,7 +1,10 @@
 ---
 layout: post
 title: "OOP - less definitions, more practice"
-subtitle: "2. How to start a project?"
+subtitle: "How to start a project?"
+excerpt: When you know what project you would like to do -
+         you would probably like to get your hands into the code as fast as possible.
+         While it may be tempting, it would be wise to do a few things first.
 ---
 I would like these posts to be knowledge dense, so let's cut to the chase without further ado.
 When you know what project you would like to do - what tool to create, what application to make -
@@ -181,5 +184,5 @@ between the packages and
 it is pretty easy to extract some parts of the application to a separate one, maybe even deployed on
 a separate server. Boom! [Microservices](https://microservices.io/).
 
-In the [next part](2019-12-26-OOP-start-with-code.md) we will finally see some code -
+In the [next part](2019-12-26-OOP-getting-practical.md) we will finally see some code -
 based on everything said above.
