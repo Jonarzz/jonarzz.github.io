@@ -53,7 +53,8 @@ with the username replaced.
 <version>1.0.0</version>
 ```
 
-Maven is installed (according to the tutorial on the aforementioned page or embedded in the IDE)
+### First build
+JDK and Maven are installed (according to the tutorial on the aforementioned page or embedded in the IDE)
 and the system path is set, the project is configured - let's build it.
 ```
 mvn clean package
@@ -61,15 +62,41 @@ mvn clean package
 run from the command line in the project base directory (where `pom.xml` is placed)
 should result in a successful build and a `.jar` file in the `target` directory.
 
+As said [before](2019-12-03-OOP-project-structure.md#java-version), we'll use the current LTS Java
+version - 11, so if that's different in your case, update it. To avoid problems with running embedded
+Maven in IntelliJ IDEA, we'll also add a `build` section to our `pom.xml`:
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+            <configuration>
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+In the `build` section we can define, what plugins should run during the Maven build execution. In this case we override the
+JDK version default value (6 for plugin version greater than or equal to `3.8.0`, 5 otherwise) in the plugin `configuration`.
+
+`java.version` variable has to be defined in `properties` section like so (just for convenience, the value could be inlined as well):
+```xml
+<properties>
+    <java.version>11</java.version>
+</properties>
+```
+
 One last thing worth noting is the warning displayed during the build:
 ```
 [WARNING] Using platform encoding (Cp1250 actually) to copy filtered resources, i.e. build is platform dependent!
 ```
-adding such section in the `pom.xml` file is a solution:
+Adding such a property to the `properties` section mentioned above (where we defined `java.version`) is a solution:
 ```xml
-<properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-</properties>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 ```
 
 ### Define responsibilities
@@ -103,6 +130,6 @@ of course it's hard to think about every possibility at the very beginning of th
 but the designing will help us create more elastic, easily maintainable and expandable code base.
 
 ### [Red - green - refactor](https://deviq.com/test-driven-development/)
-In the next part we will focus on the said API and to do that, we will write some test cases
+In the next parts we will focus on the said API and to do that, we will write some test cases
 that will be failing, until we develop the actual code - then they should pass. After that
 we will be ready for refactoring. 

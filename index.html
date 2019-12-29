@@ -3,9 +3,9 @@ layout: default
 ---
 {% for post in paginator.posts %}
     <h1>{{ post.subtitle }}</h1>
-    <h2>{{ post.title }}</h2>
+    <h3>{{ post.title }}</h3>
     <h5>{{ post.date | date: "%d/%m/%Y" }}</h5>
-    <div style="text-align: justify;">{{ post.excerpt | strip_html }}</div>
+    <div class="article-text">{{ post.excerpt | strip_html }}</div>
     <a href="{{ post.url }}" style="display: block; margin: 5px 0;">Read more...</a>
     <hr/>
 {% endfor %}
