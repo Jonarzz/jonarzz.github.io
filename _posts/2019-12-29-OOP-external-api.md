@@ -161,8 +161,8 @@ public class TestConstants {
             + "fruit.pear  = gruszka\n"
             + "sentence.short = To jest krótkie zdanie\n"
             + "sentence.long  = To jest przykład długiego zdania";
-    public static final List<String> LANGUAGE_NAMES =
-            List.of(ENGLISH_LANGUAGE, POLISH_LANGUAGE);
+    public static final Collection<String> LANGUAGE_NAMES =
+            Set.of(ENGLISH_LANGUAGE, POLISH_LANGUAGE);
 
     public static final Map<String, String> TRANSLATED_FILENAME_TO_EXPECTED_CONTENT = Map.of(
             translatedFileName(ENGLISH_LANGUAGE),
@@ -184,7 +184,7 @@ public class TestConstants {
 }
 ```
 
-We will also need a way to handle the said files:
+We will also need a way to handle said files:
 ```java
 public class TestResourceUtils {
 
@@ -301,9 +301,8 @@ class I18nExampleTest {
                    "Translated file does not exist");
 
         String fileName = file.getName();
-        Set<String> expectedFileNames = TRANSLATED_FILENAME_TO_EXPECTED_CONTENT.keySet();
-        assertTrue(expectedFileNames.contains(fileName),
-                   "Translated file name is not one of " + expectedFileNames);
+        assertTrue(TRANSLATED_FILENAME_TO_EXPECTED_CONTENT.containsKey(fileName),
+                   () -> "Translated file name is not one of " + TRANSLATED_FILENAME_TO_EXPECTED_CONTENT.keySet());
 
         Path filePath = Paths.get(file.getPath());
         assertEquals(TRANSLATED_FILENAME_TO_EXPECTED_CONTENT.get(fileName),
