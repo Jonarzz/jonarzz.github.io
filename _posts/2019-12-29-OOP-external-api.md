@@ -74,6 +74,8 @@ where:
 - `@Test` - marks the test method
 - `@DisplayName` - used to make test reports easier to read and understand; could be a short sentence that summarizes the test class or it's methods
 
+Furthermore I encourage you to check [official JUnit user guide](https://junit.org/junit5/docs/current/user-guide/), it's really good.
+
 To run the tests during our build, we need to add a proper plugin to the
 [pom.xml build section](2019-12-26-OOP-getting-practical.md#first-build):
 ```xml
@@ -145,33 +147,38 @@ We will need files (templates, dictionaries and the results), their names and co
 public class TestConstants {
 
     public static final String TEMPLATE_FILE_NAME = "template";
-    public static final String TEMPLATE_FILE_CONTENT =
-            "${fruit.apple} ${fruit.pear}\n"
-            + "${sentence.short}. ${sentence.long}.";
+    public static final List<String> TEMPLATE_FILE_CONTENT_LINES = List.of(
+            "${fruit.apple} ${fruit.pear}",
+            "${sentence.short}. ${sentence.long}."
+    );
 
     public static final String ENGLISH_LANGUAGE = "eng";
-    public static final String ENGLISH_DICTIONARY_FILE_CONTENT =
-            "fruit.apple = apple\n"
-            + "fruit.pear  = pear\n"
-            + "sentence.short = This is a short sentence\n"
-            + "sentence.long  = This is an example of a long sentence";
+    public static final List<String> ENGLISH_DICTIONARY_FILE_CONTENT_LINES = List.of(
+            "fruit.apple = apple",
+            "fruit.pear  = pear",
+            "sentence.short = This is a short sentence",
+            "sentence.long  = This is an example of a long sentence"
+    );
     public static final String POLISH_LANGUAGE = "pol";
-    public static final String POLISH_DICTIONARY_FILE_CONTENT =
-            "fruit.apple = jabłko\n"
-            + "fruit.pear  = gruszka\n"
-            + "sentence.short = To jest krótkie zdanie\n"
-            + "sentence.long  = To jest przykład długiego zdania";
-    public static final Collection<String> LANGUAGE_NAMES =
-            Set.of(ENGLISH_LANGUAGE, POLISH_LANGUAGE);
+    public static final List<String> POLISH_DICTIONARY_FILE_CONTENT_LINES = List.of(
+            "fruit.apple = jabłko",
+            "fruit.pear  = gruszka",
+            "sentence.short = To jest krótkie zdanie",
+            "sentence.long  = To jest przykład długiego zdania"
+    );
+    public static final Collection<String> LANGUAGE_NAMES = Set.of(ENGLISH_LANGUAGE, POLISH_LANGUAGE);
 
-    public static final Map<String, String> TRANSLATED_FILENAME_TO_EXPECTED_CONTENT = Map.of(
+    public static final Map<String, List<String>> TRANSLATED_FILENAME_TO_EXPECTED_CONTENT_LINES = Map.of(
             translatedFileName(ENGLISH_LANGUAGE),
-            "apple pear\n"
-            + "This is a short sentence. This is an example of a long sentence.",
-
+            List.of(
+                    "apple pear",
+                    "This is a short sentence. This is an example of a long sentence."
+            ),
             translatedFileName(POLISH_LANGUAGE),
-            "jabłko gruszka\n"
-            + "To jest krótkie zdanie. To jest przykład długiego zdania."
+            List.of(
+                    "jabłko gruszka",
+                    "To jest krótkie zdanie. To jest przykład długiego zdania."
+            )
     );
 
     private TestConstants() {
@@ -193,10 +200,9 @@ public class TestResourceUtils {
 
     public static File createResourceDirectory(String subdirectoryName)
             throws URISyntaxException {
-        URI resourcesUri = Objects.requireNonNull(
-                TestResourceUtils.class.getClassLoader()
-                                       .getResource("."))
-                                  .toURI();
+        URI resourcesUri = TestResourceUtils.class.getClassLoader()
+                                                  .getResource(".")
+                                                  .toURI();
         File resourceDirectory = new File(resourcesUri);
         File subdirectory = new File(resourceDirectory, subdirectoryName);
         if (!subdirectory.exists() && !subdirectory.mkdir()) {
@@ -205,13 +211,13 @@ public class TestResourceUtils {
         return subdirectory;
     }
 
-    public static void createResource(File directory, String fileName, String fileContent)
+    public static void createResource(File directory, String fileName, Iterable<String> fileContentLines)
             throws IOException {
         File file = new File(directory, fileName);
         if (!file.exists() && !file.createNewFile()) {
             throw new RuntimeException("Could not create file " + fileName);
         }
-        Files.write(file.toPath(), fileContent.getBytes());
+        Files.write(file.toPath(), fileContentLines);
     }
 
     public static URL getResource(String directoryPath, String resourcePath) {
@@ -238,14 +244,18 @@ public class TestResourceUtils {
 
 }
 ```
-Private constructors were used to show that those classes serve as constants holder (`TestConstants`)
-and utility static methods provider (`TestResourceUtils`) only. It makes usage of the class more obvious as no instance can be created,
+Private constructors were used to show that those classes serve onlty as: a constants holder (`TestConstants`)
+and a utility static methods provider (`TestResourceUtils`). It makes usage of the class more obvious as no instance can be created,
 all calls should be static.
 
 ### [Acceptance test](http://softwaretestingfundamentals.com/acceptance-testing/)
-When calling our application `main` method with the arguments mentioned before, we expect translation files to be created,
+When calling our application's `main` method with the arguments mentioned before, we expect translation files to be created,
 having appropriate names and properly translated content. All of that boils down to the test shown below:
 ```java
+// constants imported from TestConstants
+// statically imported methods from TestResourceUtils:
+// createResource, createResourceDirectory, getResource, getResourceFileForAssertion
+
 @DisplayName("Internationalization tool acceptance tests")
 class I18nExampleTest {
 
@@ -253,11 +263,10 @@ class I18nExampleTest {
 
     @BeforeAll
     static void setup() throws URISyntaxException, IOException {
-        // before tests execution we create resources subdirectory with template file and dictionary files
         File directory = createResourceDirectory(RESOURCE_SUBDIRECTORY_NAME);
-        createResource(directory, TEMPLATE_FILE_NAME, TEMPLATE_FILE_CONTENT);
-        createResource(directory, ENGLISH_LANGUAGE,   ENGLISH_DICTIONARY_FILE_CONTENT);
-        createResource(directory, POLISH_LANGUAGE,    POLISH_DICTIONARY_FILE_CONTENT);
+        createResource(directory, TEMPLATE_FILE_NAME, TEMPLATE_FILE_CONTENT_LINES);
+        createResource(directory, ENGLISH_LANGUAGE,   ENGLISH_DICTIONARY_FILE_CONTENT_LINES);
+        createResource(directory, POLISH_LANGUAGE,    POLISH_DICTIONARY_FILE_CONTENT_LINES);
     }
 
     @Test
@@ -271,23 +280,20 @@ class I18nExampleTest {
                                                                  dictionaryName))
                               .map(URL::getPath);
         String[] arguments = Stream.concat(
-                Stream.of(templateFilePath), // first argument passed to main is the template file path
-                dictionaryFilePathsStream // other arguments are the translation dictionary files
+                Stream.of(templateFilePath),
+                dictionaryFilePathsStream
         ).toArray(String[]::new);
 
         I18nExample.main(arguments);
 
         assertAll(
                 getTranslatedFilesStreamForAssertion().map(either -> () -> {
-                    // we throw an assertion exception if file handling has been corrupted
                     File file = either.getOrElseThrow(either::getLeft);
-                    // if the file in the Either is not corrupted, we perform the assertions
                     assertTranslatedFile(file);
                 })
         );
     }
 
-    // vavr's Either: https://www.javadoc.io/doc/io.vavr/vavr/latest/io/vavr/control/Either.html
     private Stream<Either<AssertionFailedError, File>> getTranslatedFilesStreamForAssertion() {
         return LANGUAGE_NAMES
                 .stream()
@@ -298,23 +304,29 @@ class I18nExampleTest {
 
     private void assertTranslatedFile(File file) throws IOException {
         assertTrue(file.exists(),
-                   "Translated file does not exist");
+                   "Translated file " + file.getName() + " does not exist");
 
         String fileName = file.getName();
-        assertTrue(TRANSLATED_FILENAME_TO_EXPECTED_CONTENT.containsKey(fileName),
-                   () -> "Translated file name is not one of " + TRANSLATED_FILENAME_TO_EXPECTED_CONTENT.keySet());
+        assertTrue(TRANSLATED_FILENAME_TO_EXPECTED_CONTENT_LINES.containsKey(fileName),
+                   () -> "Translated file name " + file.getName()
+                         + " is not one of " + TRANSLATED_FILENAME_TO_EXPECTED_CONTENT_LINES.keySet());
 
         Path filePath = Paths.get(file.getPath());
-        assertEquals(TRANSLATED_FILENAME_TO_EXPECTED_CONTENT.get(fileName),
-                     Files.readString(filePath),
-                     "Translated file content is different than expected");
+        List<String> expectedLines = TRANSLATED_FILENAME_TO_EXPECTED_CONTENT_LINES.get(fileName);
+        List<String> actualLines = Files.readAllLines(filePath);
+        assertEquals(expectedLines.size(), actualLines.size(),
+                     () -> "Number of lines in file " + file.getName() + " is different than expected");
+        for (int i = 0; i < expectedLines.size(); i++) {
+            assertEquals(actualLines.get(i), actualLines.get(i),
+                         "Line " + (i + 1) + " in file " + file.getName() + " is different than expected");
+        }
     }
 
 }
 ```
 It's worth using the `message` parameters in JUnit assertion methods as it makes test failure logs easier to understand and debug.
-For example: `expected <true>, but got <false>` does not say much, but when there's `Translated file does not exist` next to it - it all makes sense.
-Another way of handling it is
+For example: `expected <true>, but got <false>` does not say much, but when there's `Translated file invalid-name.txt does not exist` next to it -
+it all makes sense. Another way of handling it is
 [Hamcrest](https://objectpartners.com/2013/09/18/the-benefits-of-using-assertthat-over-other-assert-methods-in-unit-tests/),
 which often increases readability of assertions. We'll not focus on that in this series, but it's worth to know the possibilities.
 

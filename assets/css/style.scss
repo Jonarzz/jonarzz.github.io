@@ -137,3 +137,17 @@ code.language-plaintext {
         left: 28px;
     }
 }
+
+:target {
+    animation: target-fade .5s;
+    border-left: none;
+}
+
+@keyframes target-fade {
+    from {
+        border-left: 100px lightgray solid;
+    }
+    to {
+        border-left: 0 lightgray solid;
+    }
+}
