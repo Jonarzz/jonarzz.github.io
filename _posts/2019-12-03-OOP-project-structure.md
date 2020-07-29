@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "OOP - less definitions, more practice"
+title: "OOP - fewer definitions, more practice"
 subtitle: "How to start a project?"
 excerpt: When you know what project you would like to do -
          you would probably like to get your hands into the code as fast as possible.
@@ -22,14 +22,14 @@ but other languages and tools such as plain
 [React](https://reactjs.org/) or [Python](https://www.python.org/) probably would be
 more suitable for the aforementioned purposes.
 
-Similarly in just Java world **there is a ton of tools and libraries and choosing the right ones
+Similarly, in just Java world **there is a ton of tools and libraries and choosing the right ones
 for the project is an important thing to do** at the very start and during the development.
 Lots of code has been written and there are so many open source and free to use projects
 that there is no point in writing everything from scratch. Of course, it's worth knowing how they work
 or even write some similar tools to learn, but in the end using appropriate tools and frameworks
 can save us a lot of time and trouble. On the other hand, multiplicity of such projects often makes it
 hard to come up with a good choice at the very beginning. It all comes with experience,
-so if you can use your IT colleagues' knowledge at the univeristy or at work - do it!
+so if you can use your IT colleagues' knowledge at the university or at work - do it!
 You can find a vast list of Java frameworks [here](https://github.com/akullpp/awesome-java).
 Usually the best idea is to just look up the Internet - blog posts and articles - to find the best tool
 for your purpose - [here's](https://hackr.io/blog/java-frameworks) an example.
@@ -47,12 +47,12 @@ from downloading it to getting it to run or to being able to modify it easily.
 
 #### Java version
 An important thing when creating a tool that others might find useful is to choose the right Java version.
-Big companies are often reluctant to change the JDK version every few months and also to choose
-newest ones without them being properly tested and bugfixed. Current
+Big companies are often reluctant to change the JDK version every few months and to choose
+the newest ones without them being properly tested and bugfixed. Current
 [Java Support Roadmap](https://www.oracle.com/technetwork/java/java-se-support-roadmap.html) 
 makes it more tempting to choose newer and newer Java versions as most of them provide some new features,
 API enrichment and optimization. The other side of the coin is that already existing projects using
-older Java version will not be able to use your library until they migrate to new version
+older Java version will not be able to use your library until they migrate to new version,
 and it may not happen as often as it could be expected. Right now, in my opinion, starting with current
 LTS (long term support) Java would be the best option. All information about release dates and LTS-marked
 versions can be found in the link above.
@@ -112,7 +112,7 @@ When using the approach described above, we could end up with a catalog structur
     - Payment
     - Delivery
     
-...and that's without interfaces and their implementations. That's **package by layer**. Often used, has it's advantages, but now that I worked in
+...and that's without interfaces and their implementations. That's **package by layer**. Often used, has its advantages, but now that I worked in
 environments with such approach more, I prefer **package by feature**.
 
 Package-by-feature's main goal is to separate the files by their business and not technical context.
@@ -154,33 +154,32 @@ so this structure makes it easier to find yourself in. Testing modules with conc
 and strictly separated logic is easier and more consistent as well.
 Another huge advantage is the possibility to actually use the **default
 [access level modifier](https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html)**,
-which is not `public` on the contrary to popular belief and it was made like this for a reason.
+which is not `public` on the contrary to popular belief, and it was made like this for a reason.
 
 #### API
 API (application programming **interface**) is a commonly used term. Maybe even used to the point that
-the abbreviation loses it's actual meaning, becoming anything the person saying it wanted to say.
+the abbreviation loses its actual meaning, becoming anything the person saying it wanted to say.
 Emphasis on the word *interface* is not coincidental. API is what you're actually exposing in your
 application. If someone is to use your code, they will do it through the API. If you make everything
 public, it may turn out that the tool or framework you've written is not used as you intended.
-You create a new version of your library and you want to change some names, modify method signatures -
+You create a new version of your library, and you want to change some names, modify method signatures -
 if public classes are modified, the version will have to increase it's [major part](https://semver.org/).
 That's why most libraries don't change this part so often -
 such changes are ["breaking"](https://en.wiktionary.org/wiki/breaking_change), require changes in
-client code or even migration. And this is the reason not to start coding without analyzing the problem,
+client code or even migration. This is the reason not to start coding without analyzing the problem,
 thinking it over, designing an API and encapsulating it.
 
-*Note: "REST API" is commonly used altogether and it also fits the definition above -
+*Note: "REST API" is commonly used altogether, and it also fits the definition above -
  this is an externally exposed web interface that has a strict contract,
  hence the existence of [versioning mechanism](https://restfulapi.net/versioning/)*.
  
 So - having `public` modifier only on the classes we want to be used externally of the package
 makes it easier to expose an API, view and analyze the code, test it and refactor. In the shop example
-above we should probably make only `Service` classes public and the rest could stay hidden.
+above we should probably make only `Service` classes public, and the rest could stay hidden.
 
 #### Separation
-The last advantage of the package by feature approach is it's modularity. With strict boundaries
-between the packages and
-[loose coupling](https://stackoverflow.com/questions/226977/what-is-loose-coupling-please-provide-examples)
+The last advantage of the package by feature approach is its modularity. With strict boundaries
+between the packages and [loose coupling](https://stackoverflow.com/questions/226977/what-is-loose-coupling-please-provide-examples)
 it is pretty easy to extract some parts of the application to a separate one, maybe even deployed on
 a separate server. Boom! [Microservices](https://microservices.io/).
 

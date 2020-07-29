@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "OOP - less definitions, more practice"
+title: "OOP - fewer definitions, more practice"
 subtitle: "Designing external API"
 excerpt: Based on the goal (user story) we create the external API.
          Based on the requirements (tasks) we create the internal API.
@@ -25,7 +25,7 @@ public class I18nExample {
 
 }
 ```
-And the test in `src/test/java`:
+paired with the test in `src/test/java`:
 ```java
 package io.github.jonarzz;
 
@@ -74,7 +74,7 @@ where:
 - `@Test` - marks the test method
 - `@DisplayName` - used to make test reports easier to read and understand; could be a short sentence that summarizes the test class or it's methods
 
-Furthermore I encourage you to check [official JUnit user guide](https://junit.org/junit5/docs/current/user-guide/), it's really good.
+Furthermore, I encourage you to check [official JUnit user guide](https://junit.org/junit5/docs/current/user-guide/), it's excellent.
 
 To run the tests during our build, we need to add a proper plugin to the
 [pom.xml build section](2019-12-26-OOP-getting-practical.md#first-build):
@@ -99,7 +99,7 @@ Thanks to that we'll see such log when running the build:
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
-We can optionally add the `configuration` section to the `plugin` to use `@DisplayName` values when running Maven build in console:
+We can optionally add the `configuration` section to the `plugin` to use `@DisplayName` values when running a Maven build in the console:
 ```xml
 <configuration>
     <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
@@ -280,8 +280,8 @@ public class TestResourceUtils {
 }
 ```
 
-Private constructors were used to show that those classes serve only as: a constants holder (`TestConstants`)
-and a utility static methods provider (`TestResourceUtils`). It makes usage of the class more obvious as no instance can be created,
+Private constructors were used to show that those classes serve only as: a constants' holder (`TestConstants`)
+and a utility static methods' provider (`TestResourceUtils`). It makes usage of the class more obvious as no instance can be created,
 all calls should be static.
 
 ### [Acceptance test](http://softwaretestingfundamentals.com/acceptance-testing/)
@@ -391,5 +391,5 @@ We ended up with a test that fails. [This is expected](2019-12-26-OOP-getting-pr
 [INFO] 
 [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
 ```
-Our application does not actually do anything, so the test does not pass. When we implement it's features, the test should succeed.
+Our application does not actually do anything, so the test does not pass. When we implement its features, the test should succeed.
 Before that happens, we'll need to design the internal API and cover it with tests - that's what we'll do in the next article.

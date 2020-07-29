@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "OOP - less definitions, more practice"
+title: "OOP - fewer definitions, more practice"
 subtitle: "Getting practical"
 excerpt: Having a good idea for a project is not an easy thing.
          What's even more difficult is actually starting the project and finishing it.
@@ -15,7 +15,7 @@ a great idea for another application has suddenly come to your mind.
 
 When learning a framework, a tool or a new programming language, I would suggest starting with
 something relatively small. I'd say that it would be best if such a project could be finished
-in it's basic form in a week. After that time you could start something new or continue with
+in its basic form in a week. After that time you could start something new or continue with
 adding new features to this one, but I want to emphasize having something actually **done**.
 While [agile development](https://agilemanifesto.org/principles.html) might not be all
 sunshine and rainbows, when carried out right, it really helps both the developers and
@@ -38,7 +38,7 @@ the author(s) of the project and grouping all the projects by the same authors t
 [org.apache](https://mvnrepository.com/artifact/org.apache) groups the projects of
 [the Apache foundation](https://www.apache.org/) and [org.springframework](https://mvnrepository.com/artifact/org.springframework) -
 [the Spring Framework](https://mvnrepository.com/artifact/org.springframework) projects.
-By convention it's usually the main page of your organization/personal page's URL reversed, so in my case
+By convention, it's usually the main page of your organization/personal page's URL reversed, so in my case
 it's `io.github.jonarzz` - if you don't have your own domain, you could start with a similar one,
 with the username replaced.
 
@@ -54,7 +54,7 @@ with the username replaced.
 ```
 
 ### First build
-JDK and Maven are installed (according to the tutorial on the aforementioned page or embedded in the IDE)
+JDK and Maven are installed (according to the tutorial on the aforementioned page or embedded in the IDE),
 and the system path is set, the project is configured - let's build it.
 ```
 mvn clean package
