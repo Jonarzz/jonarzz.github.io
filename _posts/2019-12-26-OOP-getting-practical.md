@@ -110,7 +110,7 @@ from around the world.
 #### Requirements
  - run as an executable command line script 
     - *might change later*
- - load the dictionary file with translations
+ - load dictionary files with translations
     - *format not yet known*
  - load one or more template files
     - *way of searching for template files not yet known*

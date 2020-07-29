@@ -125,17 +125,32 @@ Thanks to that, the log becomes:
 Most of the requirements are not fully confirmed, so we'll need to assume a few things for now:
 1. `${this.is.our.placeholder.format}`
 2. `this.is.our.placeholder.format = This is our dictionary format`
-3. from `template` filename, `eng` and `pol` dictionary names, we will create `template-eng` and `template-pol` translated files
+3. from `template/template1.html` filename, `eng.properties` and `pol.properties` dictionaries in `dictionary`
+base directory we will create `output/template1-eng.html` and `output/template1-pol.html` translated files etc.
 
-To successfully generate the translation files, we will need a template file with placeholders defined above
-and translation dictionaries in the format defined above for each language. Our application will be run like so:
+To successfully generate the translation files, we will need translation dictionaries in the format defined above
+and template files with placeholders defined above.
+
+Let's take such file structure:
+- dictionary
+  - eng.properties
+  - pol.properties
+- output
+- template
+  - template1.html
+  - template2.html
+  - template3.html
+  
+Our application will be run like so:
 ```
-./i18n.sh [template file path] [translation dictionaries paths]
+./i18n.sh [translation dictionaries path] [output path] [template files paths...]
 ```
 where `i18n.sh` would be just `java -jar i18n-example-1.0.0.jar "$@"` - we run our jar file with the arguments passed to the script.
 ```
-./i18n.sh template eng pol
+./i18n.sh dictionary output template/template1.html template/template2.html template/template3.html
 ```
+The client might want to use just the `template` directory as the parameter for the recursive scan in the future,
+so let's keep that in mind, especially that it seems natural, yet we will start like so for practice.
 
 ### Prepare for the future
 We will write quite a few tests and they will all have a few things in common. If any of the requirements changes, we wouldn't like to
@@ -145,12 +160,6 @@ make modifications in multiple files, so the best thing to do is to extract what
 We will need files (templates, dictionaries and the results), their names and contents:
 ```java
 public class TestConstants {
-
-    public static final String TEMPLATE_FILE_NAME = "template";
-    public static final List<String> TEMPLATE_FILE_CONTENT_LINES = List.of(
-            "${fruit.apple} ${fruit.pear}",
-            "${sentence.short}. ${sentence.long}."
-    );
 
     public static final String ENGLISH_LANGUAGE = "eng";
     public static final List<String> ENGLISH_DICTIONARY_FILE_CONTENT_LINES = List.of(
@@ -168,24 +177,50 @@ public class TestConstants {
     );
     public static final Collection<String> LANGUAGE_NAMES = Set.of(ENGLISH_LANGUAGE, POLISH_LANGUAGE);
 
+    public static final String TEMPLATE_1_FILE_NAME = "template1";
+    public static final List<String> TEMPLATE_1_FILE_CONTENT_LINES = List.of(
+            "${fruit.apple} ${fruit.pear}",
+            "${sentence.short}. ${sentence.long}."
+    );
+    public static final String TEMPLATE_2_FILE_NAME = "template2";
+    public static final List<String> TEMPLATE_2_FILE_CONTENT_LINES = List.of(
+            "${sentence.short}. ${sentence.long}.",
+            "${fruit.apple} ${fruit.pear}"
+    );
+    public static final Collection<String> TEMPLATE_FILE_NAMES = Set.of(TEMPLATE_1_FILE_NAME, TEMPLATE_2_FILE_NAME);
+
     public static final Map<String, List<String>> TRANSLATED_FILENAME_TO_EXPECTED_CONTENT_LINES = Map.of(
-            translatedFileName(ENGLISH_LANGUAGE),
+            translatedFileName(TEMPLATE_1_FILE_NAME, ENGLISH_LANGUAGE),
             List.of(
                     "apple pear",
                     "This is a short sentence. This is an example of a long sentence."
             ),
-            translatedFileName(POLISH_LANGUAGE),
+            translatedFileName(TEMPLATE_1_FILE_NAME, POLISH_LANGUAGE),
             List.of(
                     "jabłko gruszka",
                     "To jest krótkie zdanie. To jest przykład długiego zdania."
+            ),
+            translatedFileName(TEMPLATE_2_FILE_NAME, ENGLISH_LANGUAGE),
+            List.of(
+                    "This is a short sentence. This is an example of a long sentence.",
+                    "apple pear"
+            ),
+            translatedFileName(TEMPLATE_2_FILE_NAME, POLISH_LANGUAGE),
+            List.of(
+                    "To jest krótkie zdanie. To jest przykład długiego zdania.",
+                    "jabłko gruszka"
             )
     );
 
     private TestConstants() {
     }
 
-    public static String translatedFileName(String language) {
-        return TEMPLATE_FILE_NAME + "-" + language;
+    public static String propertiesFileName(String language) {
+        return language + ".properties";
+    }
+
+    public static String translatedFileName(String templateFileName, String language) {
+        return templateFileName + "-" + language;
     }
 
 }
@@ -244,7 +279,8 @@ public class TestResourceUtils {
 
 }
 ```
-Private constructors were used to show that those classes serve onlty as: a constants holder (`TestConstants`)
+
+Private constructors were used to show that those classes serve only as: a constants holder (`TestConstants`)
 and a utility static methods provider (`TestResourceUtils`). It makes usage of the class more obvious as no instance can be created,
 all calls should be static.
 
@@ -260,28 +296,38 @@ having appropriate names and properly translated content. All of that boils down
 class I18nExampleTest {
 
     private static final String RESOURCE_SUBDIRECTORY_NAME = "acceptance";
+    private static final String DICTIONARY_SUBDIRECTORY_NAME = RESOURCE_SUBDIRECTORY_NAME + "/dictionary";
+    private static final String OUTPUT_SUBDIRECTORY_NAME     = RESOURCE_SUBDIRECTORY_NAME + "/output";
+    private static final String TEMPLATE_SUBDIRECTORY_NAME   = RESOURCE_SUBDIRECTORY_NAME + "/template";
 
     @BeforeAll
     static void setup() throws URISyntaxException, IOException {
-        File directory = createResourceDirectory(RESOURCE_SUBDIRECTORY_NAME);
-        createResource(directory, TEMPLATE_FILE_NAME, TEMPLATE_FILE_CONTENT_LINES);
-        createResource(directory, ENGLISH_LANGUAGE,   ENGLISH_DICTIONARY_FILE_CONTENT_LINES);
-        createResource(directory, POLISH_LANGUAGE,    POLISH_DICTIONARY_FILE_CONTENT_LINES);
+        createResourceDirectory(RESOURCE_SUBDIRECTORY_NAME);
+
+        File templateDirectory = createResourceDirectory(TEMPLATE_SUBDIRECTORY_NAME);
+        createResource(templateDirectory, TEMPLATE_1_FILE_NAME, TEMPLATE_1_FILE_CONTENT_LINES);
+        createResource(templateDirectory, TEMPLATE_2_FILE_NAME, TEMPLATE_2_FILE_CONTENT_LINES);
+
+        File dictionaryDirectory = createResourceDirectory(DICTIONARY_SUBDIRECTORY_NAME);
+        createResource(dictionaryDirectory, propertiesFileName(ENGLISH_LANGUAGE), ENGLISH_DICTIONARY_FILE_CONTENT_LINES);
+        createResource(dictionaryDirectory, propertiesFileName(POLISH_LANGUAGE),  POLISH_DICTIONARY_FILE_CONTENT_LINES);
+
+        createResourceDirectory(OUTPUT_SUBDIRECTORY_NAME);
     }
 
     @Test
     @DisplayName("Successfully create translation files")
     void successfullyCreateTranslationFiles() {
-        String templateFilePath = getResource(RESOURCE_SUBDIRECTORY_NAME, TEMPLATE_FILE_NAME)
-                .getPath();
-        Stream<String> dictionaryFilePathsStream =
-                LANGUAGE_NAMES.stream()
-                              .map(dictionaryName -> getResource(RESOURCE_SUBDIRECTORY_NAME,
-                                                                 dictionaryName))
-                              .map(URL::getPath);
+        String dictionaryDirectory = getResource(DICTIONARY_SUBDIRECTORY_NAME, "").getPath();
+        String outputDirectory = getResource(OUTPUT_SUBDIRECTORY_NAME, "").getPath();
+        Stream<String> templateFilePathsStream =
+                TEMPLATE_FILE_NAMES.stream()
+                                   .map(templateName -> getResource(TEMPLATE_SUBDIRECTORY_NAME,
+                                                                    templateName))
+                                   .map(URL::getPath);
         String[] arguments = Stream.concat(
-                Stream.of(templateFilePath),
-                dictionaryFilePathsStream
+                Stream.of(dictionaryDirectory, outputDirectory),
+                templateFilePathsStream
         ).toArray(String[]::new);
 
         I18nExample.main(arguments);
@@ -295,11 +341,14 @@ class I18nExampleTest {
     }
 
     private Stream<Either<AssertionFailedError, File>> getTranslatedFilesStreamForAssertion() {
-        return LANGUAGE_NAMES
-                .stream()
-                .map(TestConstants::translatedFileName)
-                .map(translatedFileName -> getResourceFileForAssertion(RESOURCE_SUBDIRECTORY_NAME,
-                                                                       translatedFileName));
+        Stream.Builder<Either<AssertionFailedError, File>> streamBuilder = Stream.builder();
+        for (String templateFileName : TEMPLATE_FILE_NAMES) {
+            for (String languageName : LANGUAGE_NAMES) {
+                String translatedFileName = translatedFileName(templateFileName, languageName);
+                streamBuilder.add(getResourceFileForAssertion(OUTPUT_SUBDIRECTORY_NAME, translatedFileName));
+            }
+        }
+        return streamBuilder.build();
     }
 
     private void assertTranslatedFile(File file) throws IOException {
@@ -335,10 +384,12 @@ We ended up with a test that fails. [This is expected](2019-12-26-OOP-getting-pr
 ```
 [ERROR] Failures: 
 [ERROR]   I18nExampleTest.successfullyCreateTranslationFiles:66 Multiple Failures (2 failures)
-	org.opentest4j.AssertionFailedError: template-eng file does not exist in acceptance/ resource directory
-	org.opentest4j.AssertionFailedError: template-pol file does not exist in acceptance/ resource directory
+	org.opentest4j.AssertionFailedError: template1-eng file does not exist in acceptance/output/ resource directory
+	org.opentest4j.AssertionFailedError: template1-pol file does not exist in acceptance/output/ resource directory
+	org.opentest4j.AssertionFailedError: template2-eng file does not exist in acceptance/output/ resource directory
+	org.opentest4j.AssertionFailedError: template2-pol file does not exist in acceptance/output/ resource directory
 [INFO] 
 [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
 ```
-Our application does not actually do anything, so it does not pass the test. When we implement it's features, the test should succeed.
+Our application does not actually do anything, so the test does not pass. When we implement it's features, the test should succeed.
 Before that happens, we'll need to design the internal API and cover it with tests - that's what we'll do in the next article.
