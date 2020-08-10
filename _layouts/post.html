@@ -23,6 +23,11 @@ layout: default
     });
     document.querySelectorAll('section a').forEach(link => link.target = '_blank');
 </script>
-<a href="{{ site.url }}" class="fixed-link-to-main-page">
+<a href="{{ site.url }}" class="fixed-link fixed-link--to-main-page">
     Go to main page
 </a>
+{% if page.next.url %}
+    <a href="{{ page.next.url  }}" class="fixed-link fixed-link--to-next-post">
+        Next post
+    </a>
+{% endif %}
