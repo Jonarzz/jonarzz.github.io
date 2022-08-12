@@ -393,3 +393,4 @@ We ended up with a test that fails. [This is expected](2019-12-26-OOP-getting-pr
 ```
 Our application does not actually do anything, so the test does not pass. When we implement its features, the test should succeed.
 Before that happens, we'll need to design the internal API and cover it with tests - that's what we'll do in the next article.
+_Spoiler alert - we will not_.

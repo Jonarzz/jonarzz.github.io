@@ -29,7 +29,7 @@ ul#markdown-toc ul {
 }
 
 .wrapper {
-    width: 70%;
+    width: 90%;
     display: flex;
     flex: 1 1 auto;
     overflow: hidden;
@@ -62,10 +62,15 @@ header > h1 {
 
 section {
     width: inherit;
+    overflow: scroll;
 }
 
 hr {
     margin-right: 20%;
+}
+
+section > * {
+    padding-right: 10%;
 }
 
 section > p,
@@ -73,7 +78,6 @@ section > ol,
 section > ul,
 .article-text {
     text-align: justify;
-    padding-right: 20%;
 }
 
 a {
